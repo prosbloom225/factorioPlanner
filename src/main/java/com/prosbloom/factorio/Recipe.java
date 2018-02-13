@@ -5,18 +5,18 @@ import java.util.HashMap;
 
 
 public class Recipe {
-    private Map<Item, Integer> recipe;
+    private Map<Integer, Integer> recipe;
 
     public Recipe() {
-        this.recipe = new HashMap<Item, Integer>();
+        this.recipe = new HashMap<Integer, Integer>();
     }
-    public Recipe(Map<Item, Integer> recipe) {
+    public Recipe(Map<Integer, Integer> recipe) {
         this.recipe = recipe;
     }
-    public void addComponent(Item item, int cnt) {
+    public void addComponent(int item, int cnt) {
         recipe.put(item, new Integer(cnt));
     }
-    public Map<Item, Integer> getRecipe() {
+    public Map<Integer, Integer> getRecipe() {
         return recipe;
     }
 }
