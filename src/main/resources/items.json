@@ -1,0 +1,16 @@
+[
+    {
+        "name" : "testItem", 
+        "id" : 1,
+        "recipe" : [{
+            "name" : "testItem2",
+            "qty" : 2
+        }]
+    },
+    {
+        "name" : "testItem2",
+        "id" : 2,
+        "recipe" : [{
+        }]
+    }
+]
