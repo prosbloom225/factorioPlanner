@@ -16,29 +16,12 @@ public class Planner {
     private static void loadItems() 
     throws JsonProcessingException, IOException {
         ObjectMapper om  = new ObjectMapper();
-        String json = "{}";
 
-        Item testItem = new Item("testItem", 1);
-        Item testItem2 = new Item("testItem2", 2);
-
-        ItemRegistry.addItem(testItem);
-        ItemRegistry.addItem(testItem2);
 
         Item[] items = om.readValue(itemsJson, Item[].class);
-        for (Item i : items )
-            log.info("item: " + i);
-
-        /*
-        testItem.getRecipe().addComponent(testItem2, 2);
-        testItem.getRecipe().addComponent(testItem2, 2);
-        log.info(testItem.toString());
-        */
-
-
-
-
-        // log.info(om.writeValueAsString(testItem));
-
+        ItemRegistry.dumpItems();
+        // for (Item i : items )
+        //     log.info("item: " + i);
     }
 
     public static void main(String[] args) {

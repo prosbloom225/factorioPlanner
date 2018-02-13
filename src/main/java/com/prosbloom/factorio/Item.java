@@ -10,33 +10,63 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 
 public class Item {
-    private static final Logger log = Logger.getLogger(Planner.class.getName());
+    private static final Logger log = Logger.getLogger(Item.class.getName());
 
     private String name;
-    private int id;
+    private String machine;
+    private int time;
+    private int output;
     private Recipe recipe;
 
-    public Item(String name, int id) {
-        this.name = name;
-        this.id = id;
-        this.recipe = new Recipe();
+
+    public Item() {
+        ItemRegistry.register(this);
+        recipe = new Recipe();
+    }
+
+    @SuppressWarnings("unchecked")
+    @JsonProperty("recipe")
+    private void unpackNested(Map<String,Object>[] recipe) {
+        for (Map<String, Object> m : recipe){
+            if (m.get("name") != null) {
+                String name = (String)m.get("name");
+                int cnt = (int)m.get("cnt");
+                log.info("recipe: " + name);
+                log.info("recipe: " + cnt);
+                this.recipe.addComponent(name, cnt);
+            } else {
+                log.info("No Recipe found!");
+            }
+        }
     }
 
 
+    public void setMachine(String machine) {
+        this.machine = machine;
+    }
+    public String getMachine() {
+        return machine;
+    }
+    public void setTime(int time) {
+        this.time = time;
+    }
+    public int getTime() {
+        return time;
+    }
+    public void setOutput(int output) {
+        this.output = output;
+    }
+    public int getOutput() {
+        return output;
+    }
     public void setName(String name) {
         this.name = name;
     }
     public String getName() {
         return name;
     }
-    public void setRecipe() {
-    }
-    public Recipe getRecipe() {
-        return recipe;
-    }
-
     @Override
     public String toString() {
-        return "name: " + this.getName();
+        return "name: " + this.getName() + " - " + this.recipe.toString();
     }
 }

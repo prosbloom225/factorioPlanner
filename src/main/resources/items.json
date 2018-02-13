@@ -1,16 +1,48 @@
 [
     {
-        "name" : "testItem", 
-        "id" : 1,
+        "name" : "Copper Plate",
+        "machine" : "Furnace",
+        "time" : 3.5,
+        "output" : 2
+    },
+    {
+        "name" : "Wood",
+        "machine" : "Assembly Machine",
+        "time" : 0.5,
+        "output" : 2
+    },
+    {
+        "name" : "Wooden Board",
+        "machine" : "Assembly Machine",
+        "time" : 0.5,
+        "output" : 2,
         "recipe" : [{
-            "name" : "testItem2",
-            "qty" : 2
+            "name" : "Wood",
+            "cnt" : 1
         }]
     },
     {
-        "name" : "testItem2",
-        "id" : 2,
+        "name" : "Copper Cable",
+        "machine" : "Assembly Machine",
+        "time" : 0.5,
+        "output" : 3,
         "recipe" : [{
+            "name" : "Copper Plate",
+            "cnt" : 1
+        }]
+    },
+    {
+        "name" : "Basic Circuit Board",
+        "machine" : "Assembly Machine",
+        "time" : 0.5,
+        "output" : 1,
+        "recipe" : [{
+            "name" : "Copper Cable",
+            "cnt" : 3
+        },
+        {
+            "name" : "Wooden Board",
+            "cnt" : 1
         }]
     }
 ]
