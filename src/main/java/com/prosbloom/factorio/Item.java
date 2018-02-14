@@ -14,7 +14,7 @@ public class Item {
 
     private String name;
     private String machine;
-    private int time;
+    private double time;
     private int output;
     private Recipe recipe;
 
@@ -47,10 +47,10 @@ public class Item {
     public String getMachine() {
         return machine;
     }
-    public void setTime(int time) {
+    public void setTime(double time) {
         this.time = time;
     }
-    public int getTime() {
+    public double getTime() {
         return time;
     }
     public void setOutput(int output) {
@@ -67,6 +67,7 @@ public class Item {
     }
     @Override
     public String toString() {
-        return "name: " + this.getName() + " - " + this.recipe.toString();
+        return "name: " + this.getName() + " - " +
+            this.getOutput() + "/" + this.getTime() + this.recipe.toString();
     }
 }

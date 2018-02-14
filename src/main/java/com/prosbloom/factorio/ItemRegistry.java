@@ -18,20 +18,21 @@ public class ItemRegistry {
         log.info("Removed item: " + item.getName());
     }
 
-    public static Item retrieveItemByName(String name) {
+    public static Item retrieveItem(String name) {
         for (Item i : registry)
             if (i.getName().equals(name))
                 return i;
         return null;
     }
+    public static Item retrieveItem(int id) {
+        return registry.get(id);
+    }
+
     public static int retrieveItemId(String item) {
-        return registry.indexOf(retrieveItemByName(item));
+        return registry.indexOf(retrieveItem(item));
     }
     public static int retrieveItemId(Item item) {
         return registry.indexOf(item);
-    }
-    public static Item retrieveItem(int id) {
-        return registry.get(id);
     }
     public static int count(){
         return registry.size();
