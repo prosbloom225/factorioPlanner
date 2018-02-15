@@ -15,23 +15,35 @@ public class Planner {
 
     private static File itemsJson = new File (System.getProperty("user.dir") + "/src/main/resources/items.json");
     
-    private static void generatePlan(Item item) {
-        log.info("Generating plan to produce: " + item.getName());
 
-		TreeNode<Item> root = new TreeNode<Item>(item);
-        for (Map.Entry<Item, Integer> component : item.getRecipe().entrySet()) {
-            root.addChild(plan(component.getKey()));
-        }
+    private static Map<Item, Integer> optimize(TreeNode<Item> plan, int desiredAmount, double time) {
+        // return a map of Item:assembly machines required to produce  desiredAmount/time
+        Map<Item, Integer> optimized = new HashMap<Item, Integer>();
+        double desiredRate = desiredAmount/time;
+        log.info("Optimizing " + plan.data.getName() + " for " + desiredRate + "per second");
+        int curr = 0;
+        double rate = 0;
+        // optimize current item
+        do {
+            curr++;
+            rate = (curr * plan.data.getOutput())/plan.data.getTime();
+            log.info("rate: " + rate);
+        } while (rate < desiredRate);
+        optimized.put(plan.data, new Integer(curr));
 
-		for (TreeNode<Item> node : root){
-			log.info("LEVEL: " + node.getLevel() + " - " + node.data);
-		}
+        // optimize components
+            for (TreeNode<Item> node : plan.children) {
+                log.info(node.data.getName());
+                optimized.putAll(optimize(node, 1, 1));
+            }
+
+        return optimized;
     }
-
     private static TreeNode<Item> plan(Item item) {
+        log.info("Generating plan to produce: " + item.getName());
         TreeNode<Item> node = new TreeNode<Item>(item);
         for (Map.Entry<Item, Integer> component : item.getRecipe().entrySet()) {
-            log.info("cmp: " + component.getKey().getName());
+            log.fine("cmp: " + component.getKey().getName());
             node.addChild(plan(component.getKey()));
         }
 
@@ -93,7 +105,18 @@ public class Planner {
             calculate(ItemRegistry.retrieveItem("Copper Cable"), 14, 1);
             calculate(ItemRegistry.retrieveItem("Copper Cable"), 9, 1);
             calculate(ItemRegistry.retrieveItem("Basic Circuit Board"), 9, 1);
-            generatePlan(ItemRegistry.retrieveItem("Basic Circuit Board"));
+            TreeNode<Item> plan = plan(ItemRegistry.retrieveItem("Basic Circuit Board"));
+
+            for (TreeNode<Item> node : plan ){
+                log.info("LEVEL: " + node.getLevel() + " - " + node.data);
+            }
+            Map<Item, Integer> optimized = optimize(plan, 10, 3);
+
+            for (Map.Entry<Item, Integer> item : optimized.entrySet()) {
+                log.info(item.getKey().getName() + " - " + item.getValue());
+            }
+
+
         } catch (Exception e) {
             log.severe(e.toString());
             e.printStackTrace();
