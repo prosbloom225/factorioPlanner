@@ -65,6 +65,9 @@ public class Item {
     public String getName() {
         return name;
     }
+    public Map<Item, Integer> getRecipe() {
+        return this.recipe.getRecipe();
+    }
     @Override
     public String toString() {
         return "name: " + this.getName() + " - " +
