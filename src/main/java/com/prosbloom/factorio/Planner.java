@@ -16,26 +16,29 @@ public class Planner {
     private static File itemsJson = new File (System.getProperty("user.dir") + "/src/main/resources/items.json");
     
 
-    private static Map<Item, Integer> optimize(TreeNode<Item> plan, int desiredAmount, double time) {
+    private static Map<Item, Integer> optimize(Item item, int desiredAmount, double time) {
         // return a map of Item:assembly machines required to produce  desiredAmount/time
         Map<Item, Integer> optimized = new HashMap<Item, Integer>();
         double desiredRate = desiredAmount/time;
-        log.info("Optimizing " + plan.data.getName() + " for " + desiredRate + "per second");
+        log.info("Optimizing " + item.getName() + " for " + desiredRate + "per second");
         int curr = 0;
         double rate = 0;
         // optimize current item
         do {
             curr++;
-            rate = (curr * plan.data.getOutput())/plan.data.getTime();
-            log.info("rate: " + rate);
+            rate = (curr * item.getOutput())/item.getTime();
+            log.fine("rate: " + rate);
         } while (rate < desiredRate);
-        optimized.put(plan.data, new Integer(curr));
+        optimized.put(item, new Integer(curr));
 
         // optimize components
-            for (TreeNode<Item> node : plan.children) {
-                log.info(node.data.getName());
-                optimized.putAll(optimize(node, 1, 1));
-            }
+        for (Map.Entry<Item, Integer> component : item.getRecipe().entrySet()) {
+                log.info(component.getKey().getName());
+
+                optimize(component.getKey(), 
+                        curr *(component.getValue() * component.getKey().getOutput()), 
+                        time).forEach((k, v) -> optimized.merge(k, v, Integer::sum));
+        }
 
         return optimized;
     }
@@ -110,8 +113,9 @@ public class Planner {
             for (TreeNode<Item> node : plan ){
                 log.info("LEVEL: " + node.getLevel() + " - " + node.data);
             }
-            Map<Item, Integer> optimized = optimize(plan, 10, 3);
+            Map<Item, Integer> optimized = optimize(ItemRegistry.retrieveItem("Basic Circuit Board"), 100, 1);
 
+            log.info("Machines required");
             for (Map.Entry<Item, Integer> item : optimized.entrySet()) {
                 log.info(item.getKey().getName() + " - " + item.getValue());
             }
